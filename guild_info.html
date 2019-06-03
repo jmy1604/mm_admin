@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
+</head>
+<body>
+    <h1>公会信息</h1>
+    <label>公会ID</label>
+    <input type="text" id="guild_id">
+    <input type="button" id="submit" value="提交" onclick="getGuildInfo()">
+    <p>结果: <div id="guild_info"></div></p>
+    <br><a href="gm.html">返回</a><br>
+
+    <script type="text/javascript">
+      function checkInputContent() {
+        player_id = document.getElementById("guild_id").value;
+        if (player_id == "") {
+          alert("公会ID不能为空");
+          return false;
+        }
+        return true;
+      }
+      function getLocalTime(nS) {
+        if (nS == 0) {
+            return "-";
+        }
+        return new Date(parseInt(nS) * 1000).toLocaleString().replace(new RegExp('/','g'),"-");  
+      }
+      function genGuildInfoList(data) {
+        var obj;
+        try {
+          obj = JSON.parse(data);
+        } catch(e) {
+          return data;
+        }
+        if (typeof(obj) != "object") {
+            return data;
+        }
+        str = "<ul>";
+        str += ("<li> ID: " + obj.Info.Id + "</li>");
+        str += ("<li> 公会名: " + obj.Info.Name + "</li>");
+        str += ("<li> 创建时间: " + getLocalTime(obj.Info.CreateTime) + "</li>");
+        str += ("<li> 创建者: " + obj.Info.Creater + "</li>");
+        str += ("<li> 等级: " + obj.Info.Level + "</li>");
+        str += ("<li> Logo: " + obj.Info.Logo + "</li>");
+        str += ("<li> 会长Id: " + obj.Info.PresidentId + "</li>");
+        str += ("<li> 会长名: " + obj.Info.PresidentName + "</li>");
+        str += ("<li> 会长等级: " + obj.Info.PresidentLevel + "</li>");
+        str += ("<li> 当前人数: " + obj.Info.CurrMemNum + "</li>");
+        str += ("<li> 最大人数: " + obj.Info.MaxMemNum + "</li>");
+
+        var mems;
+        if (obj.Info.MemList != null) {
+            mems = '<table border="1"><tr><th>玩家ID</th><th>玩家名称</th><th>玩家等级</th><th>位置</th><th>加入时间</th><th>离开时间</th><th>签到时间</th><th>捐赠次数</th><th>上次请求捐赠时间</th><th>上次捐赠时间</th></tr>';
+            var a = obj.Info.MemList;
+            for (i=0; i<a.length; i++) {
+                mems += ('<tr><td>' + a[i].PlayerId + '</td><td>' + a[i].PlayerName + '</td><td>' + a[i].PlayerLevel + '</td><td>' + a[i].Position +
+                        '</td><td>' + getLocalTime(a[i].JoinTime) + '</td><td>' + getLocalTime(a[i].QuitTime) + '</td><td>' + getLocalTime(a[i].SignTime) +
+                        '</td><td>' + a[i].DonateNum + '</td><td>' + getLocalTime(a[i].LastAskDonateTime) + '</td><td>' + getLocalTime(a[i].LastDonateTime) + '</td></tr>');
+            }
+            mems += '</table>';
+            str += ("<li> 成员列表: " + mems + "</li>");
+        }
+        str += "</ul>"; 
+        
+        return str;
+      }
+
+      function getGuildInfo() {
+        if (!checkInputContent()) {
+          return;
+        }
+        $.ajax({
+          url: 'php/guild_info.php',
+          type: 'POST',
+          data: 'guild_id='+$('#guild_id').val(),
+          async: true,
+          cache: false,
+          contentType: "application/x-www-form-urlencoded",
+          processData: false,
+          success: function (resultdata, status) {
+            document.getElementById("guild_info").innerHTML = genGuildInfoList(resultdata);
+            alert('请求发送成功 状态 ' + status + '数据 ' + resultdata);
+          },
+          error: function (returndata) {
+            alert('请求发送失败');
+          }
+        });
+      }
+    </script>
+</body>
+</html>

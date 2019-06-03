@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>IH GM Admin</title>
+<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
+</head>
+<body onload="Load();">
+    <p><div id="result"></div></p>
+    <script type="text/javascript">
+      function Load() {
+        $.ajax({
+          url: 'php/gm.php',
+          type: 'POST',
+          async: true,
+          cache: false,
+          contentType: "application/x-www-form-urlencoded",
+          processData: false,
+          success: function (resultdata, status) {
+            document.getElementById("result").innerHTML = resultdata;
+          },
+          error: function (returndata) {
+            alert('请求发送失败');
+          }
+        });
+      }
+    </script>
+</body>
+</html>

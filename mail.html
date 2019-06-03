@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
+</head>
+<body>
+    <h1>系统邮件</h1>
+    <label>邮件ID</label>
+    <input type="text" name="MailID" id="mail_id"><br>
+    <label>物品队列</label>
+    <input type="text" name="ItemList" id="item_list"><br>
+    <label>玩家ID</label>
+    <input type="text" name="PlayerId" id="player_id"><br>
+    <input type="submit" value="提交" onclick="sendMail()">
+    <p>结果: <div id="result"></div></p>
+    <br><a href="gm.html">返回</a><br>
+
+    <script type="text/javascript">
+      function checkInputContent() {
+        var v = this.document.getElementById("mail_id").value;
+        console.log(v);
+        if (v == "") {
+          alert("邮件ID不能为空");
+          return false;
+        }
+        v = this.document.getElementById("item_list").value;
+        if (v == "") {
+          alert("物品队列不能为空");
+          return false;
+        }
+        v = this.document.getElementById("player_id").value;
+        if (v == "") {
+          if (!confirm("是否群发")) {
+              return false;
+          }
+        }
+        return true;
+      }
+      function sendMail() {
+        if (!checkInputContent()) {
+          return;
+        }
+        $.ajax({
+          url: 'php/mail.php',
+          type: 'POST',
+          data: 'MailID='+$('#mail_id').val()+'&ItemList='+$('#item_list').val()+'&PlayerId='+$('#player_id').val(),
+          async: true,
+          cache: false,
+          contentType: "application/x-www-form-urlencoded",
+          processData: false,
+          success: function (resultdata, status) {
+            document.getElementById("result").innerHTML = resultdata;
+            alert('请求发送成功 状态 ' + status + '数据 ' + resultdata);
+          },
+          error: function (returndata) {
+            alert('请求发送失败');
+          }
+        });
+      }
+    </script>
+</body>
+</html>

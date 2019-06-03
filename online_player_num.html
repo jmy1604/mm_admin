@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
+</head>
+<body>
+    <h1>在线玩家数量</h1>
+    <label>服务器ID(不填表示所有服务器)</label><br>
+    <input type="text" id="server_id"><br>
+    <input type="button" id="submit" value="查询在线玩家数量" onclick="getOnlinePlayerNum()">
+    <p>结果: <div id="online_player_num"></div></p>
+    <br><a href="gm.html">返回</a><br>
+
+    <script type="text/javascript">
+      function getOnlineNumData(data) {
+        var obj;
+        try {
+          obj = JSON.parse(data);
+        } catch(e) {
+          return data;
+        }
+        if (typeof(obj) != "object") {
+          return data;
+        }
+        if (!Array.isArray(obj.PlayerNum)) {
+          alert("不是数组类型");
+          return data;
+        }
+
+        var str = '<table border="1"><tr><th>Server Id</th><th>在线人数</th><th>总人数</th></tr>';
+        var a = obj.PlayerNum;
+        for (i=0; i<a.length/3; i++) {
+          str += ('<tr><td>' + a[3*i] + '</td><td>' + a[3*i+1] + '</td><td>' + a[3*i+2] + '</td></tr>');
+        }
+        str += '</table>';
+        return str;
+      }
+      function getOnlinePlayerNum() {
+        $.ajax({
+          url: 'php/online_player_num.php',
+          type: 'POST',
+          data: 'server_id='+$('#server_id').val(),
+          async: true,
+          cache: false,
+          contentType: "application/x-www-form-urlencoded",
+          processData: false,
+          success: function (resultdata, status) {
+            document.getElementById("online_player_num").innerHTML = getOnlineNumData(resultdata);
+            alert('请求发送成功 状态 ' + status + '数据 ' + resultdata);
+          },
+          error: function (returndata) {
+            alert('请求发送失败');
+          }
+        });
+      }
+    </script>
+</body>
+</html>

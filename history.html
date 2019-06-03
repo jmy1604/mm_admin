@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>History</title>
+<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
+</head>
+<body onload="Load();">
+    <p><div id="result"></div></p>
+    <p><div id="history_list"></div></p>
+    <br><a href="gm.html">返回</a><br>
+    <script type="text/javascript">
+      function Load() {
+        $.ajax({
+          url: 'php/gen_history.php',
+          type: 'POST',
+          async: true,
+          cache: false,
+          contentType: "application/x-www-form-urlencoded",
+          processData: false,
+          success: function (resultdata, status) {
+            document.getElementById("result").innerHTML = resultdata;
+          },
+          error: function (returndata) {
+            alert('请求发送失败');
+          }
+        });
+      }
+      function SeeHistory($account, $page) {
+        $.ajax({
+            url: 'php/history.php',
+            type: 'POST',
+            data: 'account='+$account+'&page='+$page,
+            async: true,
+            cache: false,
+            contentType: "application/x-www-form-urlencoded",
+            processData: false,
+            success: function(resultdata, status) {
+                document.getElementById("history_list").innerHTML = resultdata;
+                //alert('请求发送成功 状态 ' + status + '数据 ' + resultdata);
+            },
+            error: function(returndata) {
+                alert('请求发送失败');
+            }
+        });
+      }
+    </script>
+</body>
+</html>

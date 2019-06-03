@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
+</head>
+<body>
+    <h1>月卡发放</h1>
+    <label>玩家ID</label>
+    <input type="text" id="player_id"><br>
+    <label>BundleId</label>
+    <input type="text" id="bundle_id"><br>
+    <input type="button" id="submit" value="发放月卡" onclick="sendMonthCard()">
+    <p>结果: <div id="result"></div></p>
+    <br><a href="gm.html">返回</a><br>
+
+    <script type="text/javascript">
+      function sendMonthCard() {
+        $.ajax({
+          url: 'php/month_card_send.php',
+          type: 'POST',
+          data: 'player_id='+$('#player_id').val()+"&bundle_id="+$('#bundle_id').val(),
+          async: true,
+          cache: false,
+          contentType: "application/x-www-form-urlencoded",
+          processData: false,
+          success: function (resultdata, status) {
+            document.getElementById("result").innerHTML = resultdata;
+            alert('请求发送成功 状态 ' + status + ' 数据 ' + resultdata);
+          },
+          error: function (returndata) {
+            alert('请求发送失败');
+          }
+        });
+      }
+    </script>
+</body>
+</html>

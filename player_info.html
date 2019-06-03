@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
+</head>
+<body>
+    <h1>玩家信息</h1>
+    <label>玩家ID</label>
+    <input type="text" id="player_id">
+    <input type="button" id="submit" value="提交" onclick="getPlayerInfo()">
+    <p>结果: <div id="player_info"></div></p>
+    <br><a href="gm.html">返回</a><br>
+
+    <script type="text/javascript">
+      function checkInputContent() {
+        player_id = document.getElementById("player_id").value;
+        if (player_id == "") {
+          alert("玩家ID不能为空");
+          return false;
+        }
+        return true;
+      }
+      function getLocalTime(nS) {  
+        return new Date(parseInt(nS) * 1000).toLocaleString().replace(new RegExp('/','g'),"-");  
+      }
+      function genPlayerInfoList(data) {
+        var obj;
+        try {
+          obj = JSON.parse(data);
+        } catch(e) {
+          return data;
+        }
+        if (typeof(obj) != "object") {
+            return data;
+        }
+        str = "<ul>";
+        str += ("<li> 账号: " + obj.Account + "</li>");
+        str += ("<li> ID: " + obj.Id + "</li>");
+        str += ("<li> 唯一ID: " + obj.UniqueId + "</li>");
+        str += ("<li> 创建时间: " + getLocalTime(obj.CreateTime) + "</li>");
+        str += ("<li> 是否在线: " + obj.IsLogin + "</li>");
+        str += ("<li> 上次登陆时间: " + getLocalTime(obj.LastLoginTime) + "</li>");
+        str += ("<li> 上次离线时间: " + getLocalTime(obj.LogoutTime) + "</li>");
+        str += ("<li> 等级: " + obj.Level + "</li>");
+        str += ("<li> VIP等级: " + obj.VipLevel + "</li>");
+        str += ("<li> 金币: " + obj.Gold + "</li>");
+        str += ("<li> 钻石: " + obj.Diamond + "</li>");
+        str += ("<li> 最高通关关卡: " + obj.CurStage + "</li>");
+        str += ("<li> 签到: " + obj.SignIn + "</li>");
+
+        var items; items = '<table border="1">';
+        if (obj.Items != null) {
+          l = obj.Items.length;
+          items += '<tr><td>ID</td>';
+          for (i=0; i<l/2; i++) {
+            items += ('<td>' + obj.Items[i*2] + '</td>');
+          }
+          items += '</tr>';
+          items += '<tr><td>数量</td>';
+          for (i=0; i<l/2; i++) {
+            items += ('<td>' + obj.Items[i*2+1] + '</td>');
+          }
+          items += '</tr>';
+        }
+        items += '</table>';
+        str += ("<li> 物品: " + items + "</li>");
+
+        var cats; cats = '<table border="1">';
+        if (obj.Cats != null) {
+          l = obj.Cats.length;
+          cats += '<tr><td>表ID</td>';
+          for (i=0; i<l/5; i++) {
+            cats += ('<td>' + obj.Cats[i*5+1] + '</td>');
+          }
+          cats += '</tr>';
+          cats += '<tr><td>ID</td>';
+          for (i=0; i<l/5; i++) {
+            cats += ('<td>' + obj.Cats[i*5] + '</td>');
+          }
+          cats += '</tr>';
+          cats += '<tr><td>产金能力</td>';
+          for (i=0; i<l/5; i++) {
+            cats += ('<td>' + obj.Cats[i*5+2] + '</td>');
+          }
+          cats += '</tr>';
+          cats += '<tr><td>消除能力</td>'
+          for (i=0; i<l/5; i++) {
+            cats += ('<td>' + obj.Cats[i*5+3] + '</td>');
+          }
+          cats += '</tr>';
+          cats += '<tr><td>探索能力</td>'
+          for (i=0; i<1/5; i++) {
+            cats += ('<td>' + obj.Cats[i*5+4] + '</td>');
+          }
+          cats += '</tr>';
+        }
+        cats += '</table>';
+        str += ("<li> 猫: " + cats + "</li>");
+        str += "</ul>"; 
+        
+        return str;
+      }
+
+      function getPlayerInfo() {
+        if (!checkInputContent()) {
+          return;
+        }
+        $.ajax({
+          url: 'php/player_info.php',
+          type: 'POST',
+          data: 'player_id='+$('#player_id').val(),
+          async: true,
+          cache: false,
+          contentType: "application/x-www-form-urlencoded",
+          processData: false,
+          success: function (resultdata, status) {
+            document.getElementById("player_info").innerHTML = genPlayerInfoList(resultdata);
+            alert('请求发送成功 状态 ' + status + '数据 ' + resultdata);
+          },
+          error: function (returndata) {
+            alert('请求发送失败');
+          }
+        });
+      }
+    </script>
+</body>
+</html>

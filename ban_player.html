@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
+<style>
+    #ban_list
+    {
+        top: 10px;
+        text-align: center;
+        margin-bottom: 0;
+    }
+    #ban_list_content
+    {
+        position: relative;
+    }
+</style>
+</head>
+<body>
+    <h1>封号</h1>
+    <div id="ban_player">
+    <label>玩家ID或账号</label><br>
+    <input type="radio" name="pid" id="sel_player_id" checked="checked">玩家ID<br>
+    <input type="radio" name="pid" id="sel_player_account">玩家账号<br>
+    <input type="text" id="player_id">
+    <input type="button" id="ban" value="提交" onclick="banPlayer(1)">
+    <input type="button" id="free" value="解除封号" onclick="banPlayer(0)">
+    <p>结果: <div id="ban_result"></div></p>
+    <br><a href="gm.html">返回</a><br>
+    </div>
+    <div id="ban_list" value="封号玩家列表">
+        <input type="button" id="bl" value="获取封号玩家列表" onclick="getBanList()">
+        <span id="ban_list_content"></span>
+    </div>
+
+    <script type="text/javascript">
+        function checkInputContent() {
+            player_id = document.getElementById("player_id").value;
+            if (player_id == "") {
+                alert("玩家ID或账号不能为空");
+                return false;
+            }
+            return true;
+        }
+        function banPlayer($ban_or_free) {
+            if (!checkInputContent()) {
+                return;
+            }
+            if ($ban_or_free > 0) {
+                if (!confirm("确定封号?")) {
+                    return;
+                }
+            }
+            $.ajax({
+                url: 'php/ban_player.php',
+                type: 'POST',
+                data: 'player_id='+$('#player_id').val()+'&ban_or_free='+$ban_or_free,
+                async: true,
+                cache: false,
+                contentType: "application/x-www-form-urlencoded",
+                processData: false,
+                success: function (result_data, status) {
+                    alert('请求发送成功 状态 ' + status + ' 数据 ' + result_data);
+                    document.getElementById("ban_result").innerHTML = result_data;
+                },
+                error: function (returndata) {
+                    alert('请求发送失败');
+                }
+            });
+        }
+        function getBanList() {
+            $.ajax({
+                url: 'php/ban_list.php',
+                type: 'POST',
+                async: true,
+                cache: false,
+                contentType: 'application/x-www-form-urlencoded',
+                processData: false,
+                success: function(result_data, status) {
+                    alert('请求发送成功 状态 ' + status + ' 数据 ' + result_data);
+                    document.getElementById("ban_list_content").innerHTML = result_data;
+                },
+                error: function(return_data) {
+                    alert("请求发送失败");
+                }
+            });
+        }
+    </script>
+</body>
+</html>
