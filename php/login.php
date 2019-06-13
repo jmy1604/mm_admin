@@ -12,9 +12,9 @@
 <body>
 	<?php 
         //获取html中的用户名（通过post请求）
-        $username=$_REQUEST["username"];
+        $username=$_POST["username"];
         //获取html中的密码（通过post请求）
-		$password=$_REQUEST["password"];
+		$password=$_POST["password"];
  
         //连接mysql 数据库，账户名root ，密码root
 		//$con = mysqli_connect("localhost", "root", "", "ih_admin");
