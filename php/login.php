@@ -48,7 +48,8 @@
 		if (is_null($dbusername)) {
 	?>
 	<script type="text/javascript">
-			alert("用户名不存在");
+			var user_name = '<?php echo $username?>';
+			alert("用户名" + user_name + "不存在");
 			window.location.href="../login.html";
 	</script>
 	<?php 
