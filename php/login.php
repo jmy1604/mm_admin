@@ -25,14 +25,19 @@
 		$dbc= new mysqli($c->DBIP, $c->DBUser, $c->DBPassword, $c->DBName);
     	if(!$dbc)  {
       		die("数据库链接错误". mysqli_error($dbc));
-    	}
+		}
+		echo("db_ip: " . $c->DBIP . ", db_user: " . $c->DBUser . ", db_password: " . $c->DBPassword . ", db_name: " . $c->DBName);
         //use user_info数据库；
 		//mysqli_select_db("user_info",$con);
 		$dbusername=null;
 		$dbpassword=null;
 		$permission=0;
+
         //查出对应用户名的信息，isdelete表示在数据库已被删除的内容
 		$result=mysqli_query($dbc, "select * from accounts where username ='$username';");
+		if (is_null($result)) {
+			die("数据库缺少数据");
+		}
         //while循环将$result中的结果找出来
 		while ($row=mysqli_fetch_array($result)) {
 			$dbusername=$row["username"];
