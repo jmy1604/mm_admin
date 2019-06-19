@@ -68,6 +68,8 @@
 				$_SESSION['permission'] = $permission;
 	?>
 	<script type="text/javascript">
+		var state = '<?php echo $_SESSION["login_state"]?>';
+		alert("登录状态 " + state);
 		window.location.href="welcome.php";
 	</script>
 	<?php 
