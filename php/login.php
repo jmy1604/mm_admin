@@ -31,7 +31,7 @@
 		//mysqli_select_db("user_info",$con);
 
         //查出对应用户名的信息，isdelete表示在数据库已被删除的内容
-		$result=mysqli_query($dbc, "select password, permission from accounts where username='$username';");
+		$result=mysqli_query($dbc, "select password, permission from accounts where username='$username'");
 		if (is_null($result)) {
 			die("数据库缺少数据");
 		}
@@ -55,7 +55,9 @@
 			if ($dbpassword!=$password){
 	?>
 	<script type="text/javascript">
-				alert("密码错误");
+				var user = '<?php echo $username?>';
+				var pw = '<?php echo $dbpassword?>';
+				alert("用户(" + user + ")密码(" + pw + ")错误");
 				window.location.href="../login.html";
 	</script>
 	<?php 
