@@ -10,7 +10,7 @@
 
 session_start ();
 $login_state = $_SESSION['login_state'];
-if ($login_state == null || $login_state <= 0) {
+if ($login_state <= 0) {
 ?>
 	<a href="exit.php">退出登录</a>
 	<script type="text/javascript">
