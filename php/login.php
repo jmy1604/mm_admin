@@ -56,7 +56,7 @@
 	?>
 	<script type="text/javascript">
 				var user = '<?php echo $username?>';
-				var pw = '<?php echo $dbpassword?>';
+				var pw = '<?php echo $password?>';
 				alert("用户(" + user + ")密码(" + pw + ")错误");
 				window.location.href="../login.html";
 	</script>
