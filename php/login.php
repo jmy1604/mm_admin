@@ -24,7 +24,7 @@
 		}
 		$dbc= new mysqli($c->DBIP, $c->DBUser, $c->DBPassword, $c->DBName);
     	if($dbc->connect_errno)  {
-      		die("数据库链接错误". $dbc->connect_errno);
+      		die("数据库链接错误 ". $dbc->connect_error . " err_code" . $dbc->connect_errno);
 		}
 		echo("db_ip: " . $c->DBIP . ", db_user: " . $c->DBUser . ", db_password: " . $c->DBPassword . ", db_name: " . $c->DBName);
         //use user_info数据库；
