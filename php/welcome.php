@@ -14,7 +14,8 @@ if ($login_state <= 0) {
 ?>
 	<a href="exit.php">退出登录</a>
 	<script type="text/javascript">
-		alert("退出登录");
+		var state = '<?php echo $_SESSION["login_state"]?>';
+		alert("退出登录 " + state);
 		window.location.href="exit.php";
 	</script>
 	<br>
